@@ -13,6 +13,9 @@ import { unknown } from '../unknown/index.ts';
 import { strictObject, type StrictObjectSchema } from './strictObject.ts';
 import type { StrictObjectIssue } from './types.ts';
 
+const symbolKey1 = Symbol();
+const symbolKey2 = Symbol();
+
 describe('strictObject', () => {
   describe('should return schema object', () => {
     const entries = { key: string() };
@@ -66,6 +69,18 @@ describe('strictObject', () => {
       expectNoSchemaIssue(strictObject({ key1: string(), key2: number() }), [
         { key1: 'foo', key2: 123 },
       ]);
+    });
+
+    test('for symbol keys', () => {
+      expect(
+        strictObject({ key1: string(), [symbolKey1]: number() })['~run'](
+          { value: { key1: 'foo', [symbolKey1]: 123, [symbolKey2]: 456 } },
+          {}
+        )
+      ).toStrictEqual({
+        typed: true,
+        value: { key1: 'foo', [symbolKey1]: 123 },
+      });
     });
   });
 

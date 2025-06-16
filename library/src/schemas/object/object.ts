@@ -107,7 +107,7 @@ export function object(
         dataset.value = {};
 
         // Process each object entry of schema
-        for (const key in this.entries) {
+        for (const key of Reflect.ownKeys(this.entries)) {
           const valueSchema = this.entries[key];
 
           // If key is present or its an optional schema with a default value,
@@ -184,7 +184,7 @@ export function object(
           ) {
             _addIssue(this, 'key', dataset, config, {
               input: undefined,
-              expected: `"${key}"`,
+              expected: `"${String(key)}"`,
               path: [
                 {
                   type: 'object',

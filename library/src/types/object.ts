@@ -66,7 +66,7 @@ export type OptionalEntrySchemaAsync =
  * Object entries interface.
  */
 export interface ObjectEntries {
-  [key: string]:
+  [key: PropertyKey]:
     | BaseSchema<unknown, unknown, BaseIssue<unknown>>
     | SchemaWithFallback<
         BaseSchema<unknown, unknown, BaseIssue<unknown>>,
