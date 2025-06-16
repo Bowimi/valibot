@@ -17,6 +17,9 @@ import { unknown } from '../unknown/index.ts';
 import { objectWithRest, type ObjectWithRestSchema } from './objectWithRest.ts';
 import type { ObjectWithRestIssue } from './types.ts';
 
+const symbolKey1 = Symbol();
+const symbolKey2 = Symbol();
+
 describe('objectWithRest', () => {
   describe('should return schema object', () => {
     const entries = { key: string() };
@@ -78,6 +81,27 @@ describe('objectWithRest', () => {
         // @ts-expect-error
         [{ key1: 'foo', key2: 123, other: true }]
       );
+    });
+
+    test('for symbol keys', () => {
+      expect(
+        objectWithRest({ key1: string(), [symbolKey1]: number() }, boolean())[
+          '~run'
+        ](
+          {
+            value: {
+              key1: 'foo',
+              [symbolKey1]: 123,
+              [symbolKey2]: '-',
+              other: true,
+            },
+          },
+          {}
+        )
+      ).toStrictEqual({
+        typed: true,
+        value: { key1: 'foo', [symbolKey1]: 123, other: true },
+      });
     });
   });
 

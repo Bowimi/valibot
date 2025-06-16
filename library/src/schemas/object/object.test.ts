@@ -12,6 +12,8 @@ import { unknown } from '../unknown/index.ts';
 import { object, type ObjectSchema } from './object.ts';
 import type { ObjectIssue } from './types.ts';
 
+const symbolKey1 = Symbol();
+
 describe('object', () => {
   describe('should return schema object', () => {
     const entries = { key: string() };
@@ -76,6 +78,18 @@ describe('object', () => {
       ).toStrictEqual({
         typed: true,
         value: { key1: 'foo' },
+      });
+    });
+
+    test('for symbol keys', () => {
+      expect(
+        object({ key1: string(), [symbolKey1]: number() })['~run'](
+          { value: { key1: 'foo', [symbolKey1]: 123 } },
+          {}
+        )
+      ).toStrictEqual({
+        typed: true,
+        value: { key1: 'foo', [symbolKey1]: 123 },
       });
     });
   });

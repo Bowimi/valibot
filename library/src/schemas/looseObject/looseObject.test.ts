@@ -13,6 +13,9 @@ import { unknown } from '../unknown/index.ts';
 import { looseObject, type LooseObjectSchema } from './looseObject.ts';
 import type { LooseObjectIssue } from './types.ts';
 
+const symbolKey1 = Symbol();
+const symbolKey2 = Symbol();
+
 describe('looseObject', () => {
   describe('should return schema object', () => {
     const entries = { key: string() };
@@ -72,6 +75,25 @@ describe('looseObject', () => {
       expectNoSchemaIssue(looseObject({ key1: string(), key2: number() }), [
         { key1: 'foo', key2: 123, other1: 'bar', other2: null },
       ]);
+    });
+
+    test('for symbol keys', () => {
+      expect(
+        looseObject({ key1: string(), [symbolKey1]: number() })['~run'](
+          {
+            value: {
+              key1: 'foo',
+              [symbolKey1]: 123,
+              [symbolKey2]: 456,
+              other: 'bar',
+            },
+          },
+          {}
+        )
+      ).toStrictEqual({
+        typed: true,
+        value: { key1: 'foo', [symbolKey1]: 123, other: 'bar' },
+      });
     });
   });
 

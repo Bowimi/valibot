@@ -146,7 +146,7 @@ export interface ObjectPathItem {
   /**
    * The path item key.
    */
-  readonly key: string;
+  readonly key: PropertyKey;
   /**
    * The path item value.
    */
