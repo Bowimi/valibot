@@ -29,7 +29,7 @@ export default component$(() => (
         variant="primary"
         label="Create issue"
         type="link"
-        href="https://github.com/fabian-hiller/valibot/issues/new"
+        href="https://github.com/open-circle/valibot/issues/new"
         target="_blank"
       />
       <ActionButton

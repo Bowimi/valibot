@@ -102,7 +102,7 @@ export const Header = component$<HeaderProps>(({ searchOpen }) => {
             preventdefault:contextmenu
             onContextMenu$={() =>
               window.open(
-                'https://github.com/fabian-hiller/valibot/tree/main/brand'
+                'https://github.com/open-circle/valibot/tree/main/brand'
               )
             }
           >
@@ -130,7 +130,6 @@ export const Header = component$<HeaderProps>(({ searchOpen }) => {
           class={clsx(
             'absolute left-0 top-full flex max-h-[60vh] w-full origin-top flex-col overflow-y-auto border-b-2 pb-8 pt-4 duration-200 lg:static lg:top-auto lg:w-auto lg:translate-y-0 lg:flex-row lg:gap-5 lg:overflow-visible lg:border-none lg:bg-transparent lg:p-0 xl:gap-6 lg:dark:bg-transparent',
             !isOpen.value && 'invisible scale-y-0 lg:visible lg:scale-y-100',
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             (isOpen.value && 'bg-white dark:bg-gray-900') ||
               (windowScrolled.value && 'bg-white/90 dark:bg-gray-900/90'),
             isOpen.value || windowScrolled.value

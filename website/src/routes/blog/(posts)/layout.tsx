@@ -38,7 +38,7 @@ export default component$(() => {
             class="mx-8 lg:mx-10"
             variant="secondary"
             type="link"
-            href={`https://github.com/fabian-hiller/valibot/blob/main/website/src/routes/blog/(posts)${location.url.pathname.slice(5)}index.mdx`}
+            href={`https://github.com/open-circle/valibot/blob/main/website/src/routes/blog/(posts)${location.url.pathname.slice(5)}index.mdx`}
             target="_blank"
             label="Edit page"
           >

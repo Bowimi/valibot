@@ -317,7 +317,7 @@ export const DocSearch = component$<DocSearchProps>(({ open }) => {
       // Select current active index
       if (event.key === 'Enter') {
         const item = searchItems.value[activeIndex.value];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
         if (item) {
           if (item.path === location.url.pathname) {
             open.value = false;
@@ -393,7 +393,7 @@ export const DocSearch = component$<DocSearchProps>(({ open }) => {
                     An unexpected error has occurred. If this happens regularly,
                     please create an{' '}
                     <TextLink
-                      href="https://github.com/fabian-hiller/valibot/issues/new"
+                      href="https://github.com/open-circle/valibot/issues/new"
                       target="_blank"
                       colored
                       underlined
