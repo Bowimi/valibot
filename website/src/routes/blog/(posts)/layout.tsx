@@ -9,7 +9,7 @@ export default component$(() => {
   const location = useLocation();
 
   return (
-    <main class="flex flex-1 flex-col items-center py-12 md:py-20 lg:py-32">
+    <main class="flex flex-1 flex-col items-center py-12 md:py-20 lg:py-28 xl:py-32">
       {/* Article */}
       <article class="max-w-(--breakpoint-xl) flex w-full flex-col gap-12 md:gap-20 lg:gap-24">
         <div class="max-w-(--breakpoint-md) mx-8 flex flex-col gap-5 md:items-center md:gap-7 md:self-center lg:mx-10 lg:gap-9">
@@ -38,7 +38,7 @@ export default component$(() => {
             class="mx-8 lg:mx-10"
             variant="secondary"
             type="link"
-            href={`https://github.com/fabian-hiller/valibot/blob/main/website/src/routes/blog/(posts)${location.url.pathname.slice(5)}index.mdx`}
+            href={`https://github.com/open-circle/valibot/blob/main/website/src/routes/blog/(posts)${location.url.pathname.slice(5)}index.mdx`}
             target="_blank"
             label="Edit page"
           >

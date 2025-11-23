@@ -290,7 +290,8 @@ const Definition = component$<DefinitionProps>(({ parent, data }) => (
             <Definition parent={data.type} data={param.type} />
           </Fragment>
         ))}
-        ) {'=>'} <Definition parent={data.type} data={data.return} />
+        ) <span class="text-teal-600 dark:text-teal-400">{'=>'}</span>{' '}
+        <Definition parent={data.type} data={data.return} />
         {(parent === 'union' ||
           parent === 'intersect' ||
           (typeof data.return === 'object' &&
@@ -359,6 +360,7 @@ const Definition = component$<DefinitionProps>(({ parent, data }) => (
                 data.name[0] !== data.name[0].toUpperCase(),
             }}
             href={data.href}
+            prefetch={false}
           >
             {data.name}
           </Link>

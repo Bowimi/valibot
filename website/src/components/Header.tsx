@@ -98,10 +98,11 @@ export const Header = component$<HeaderProps>(({ searchOpen }) => {
           <Link
             class="focus-ring inline-flex w-full select-none items-center rounded-lg p-2 font-medium transition-colors hover:text-slate-900 md:w-auto md:text-lg lg:text-xl dark:hover:text-slate-200"
             href="/"
+            prefetch={false}
             preventdefault:contextmenu
             onContextMenu$={() =>
               window.open(
-                'https://github.com/fabian-hiller/valibot/tree/main/brand'
+                'https://github.com/open-circle/valibot/tree/main/brand'
               )
             }
           >
@@ -129,7 +130,6 @@ export const Header = component$<HeaderProps>(({ searchOpen }) => {
           class={clsx(
             'absolute left-0 top-full flex max-h-[60vh] w-full origin-top flex-col overflow-y-auto border-b-2 pb-8 pt-4 duration-200 lg:static lg:top-auto lg:w-auto lg:translate-y-0 lg:flex-row lg:gap-5 lg:overflow-visible lg:border-none lg:bg-transparent lg:p-0 xl:gap-6 lg:dark:bg-transparent',
             !isOpen.value && 'invisible scale-y-0 lg:visible lg:scale-y-100',
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             (isOpen.value && 'bg-white dark:bg-gray-900') ||
               (windowScrolled.value && 'bg-white/90 dark:bg-gray-900/90'),
             isOpen.value || windowScrolled.value
@@ -139,7 +139,7 @@ export const Header = component$<HeaderProps>(({ searchOpen }) => {
           id="main-menu"
         >
           {[
-            { label: 'Guides', href: '/guides/introduction/' },
+            { label: 'Guides', href: '/guides/' },
             { label: 'API', href: '/api/' },
             { label: 'Blog', href: '/blog/' },
             { label: 'Playground', href: '/playground/' },
@@ -152,6 +152,7 @@ export const Header = component$<HeaderProps>(({ searchOpen }) => {
                   'docsearch-lvl0 text-slate-900 dark:text-slate-200'
               )}
               href={href}
+              prefetch={false}
             >
               {label}
             </Link>

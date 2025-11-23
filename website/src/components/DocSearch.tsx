@@ -245,7 +245,7 @@ export const DocSearch = component$<DocSearchProps>(({ open }) => {
                 ...storage.value,
                 [currentInput]: {
                   result: searchResult,
-                  expires: Date.now() + 2.592e8, // 3 days
+                  expires: Date.now() + 6.048e8, // 7 days
                 },
               };
 
@@ -317,7 +317,7 @@ export const DocSearch = component$<DocSearchProps>(({ open }) => {
       // Select current active index
       if (event.key === 'Enter') {
         const item = searchItems.value[activeIndex.value];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
         if (item) {
           if (item.path === location.url.pathname) {
             open.value = false;
@@ -342,7 +342,8 @@ export const DocSearch = component$<DocSearchProps>(({ open }) => {
   return (
     <div
       class={clsx(
-        open.value && 'fixed left-0 top-0 z-40 h-screen w-screen lg:p-48'
+        open.value &&
+          'fixed left-0 top-0 z-40 h-screen w-screen lg:p-40 xl:p-48'
       )}
       window:onKeyDown$={[preventDefault, handleKeyDown]}
     >
@@ -366,6 +367,7 @@ export const DocSearch = component$<DocSearchProps>(({ open }) => {
                 <input
                   class="flex-1 bg-transparent px-2 text-lg text-slate-900 outline-none placeholder:text-slate-500 md:text-xl dark:text-slate-200"
                   ref={inputElement}
+                  name="search"
                   type="search"
                   placeholder="Search docs"
                   value={input.value}
@@ -391,7 +393,7 @@ export const DocSearch = component$<DocSearchProps>(({ open }) => {
                     An unexpected error has occurred. If this happens regularly,
                     please create an{' '}
                     <TextLink
-                      href="https://github.com/fabian-hiller/valibot/issues/new"
+                      href="https://github.com/open-circle/valibot/issues/new"
                       target="_blank"
                       colored
                       underlined
@@ -541,6 +543,7 @@ const SearchItem = component$<SearchItemProps>(
         )}
         ref={element}
         href={path}
+        prefetch={false}
         onMouseEnter$={() => (activeIndex.value = index)}
         onFocusIn$={() => (activeIndex.value = index)}
         // eslint-disable-next-line qwik/valid-lexical-scope
