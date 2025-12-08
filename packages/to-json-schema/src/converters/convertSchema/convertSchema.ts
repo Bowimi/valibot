@@ -1,6 +1,9 @@
-import type { JSONSchema7 } from 'json-schema';
 import * as v from 'valibot';
-import type { ConversionConfig, ConversionContext } from '../../type.ts';
+import type {
+  ConversionConfig,
+  ConversionContext,
+  JsonSchema,
+} from '../../types/index.ts';
 import { addError, handleError } from '../../utils/index.ts';
 import { convertAction } from '../convertAction/index.ts';
 
@@ -134,12 +137,12 @@ let refCount = 0;
  * @returns The converted JSON Schema.
  */
 export function convertSchema(
-  jsonSchema: JSONSchema7,
+  jsonSchema: JsonSchema,
   valibotSchema: SchemaOrPipe,
   config: ConversionConfig | undefined,
   context: ConversionContext,
   skipRef = false
-): JSONSchema7 {
+): JsonSchema {
   if (!skipRef) {
     // If schema is in reference map use reference and skip conversion
     const referenceId = context.referenceMap.get(valibotSchema);
@@ -282,25 +285,51 @@ export function convertSchema(
     case 'strict_tuple': {
       jsonSchema.type = 'array';
 
-      // Add JSON Schema of items and ensure each item is required
-      jsonSchema.items = [];
-      jsonSchema.minItems = valibotSchema.items.length;
-      for (const item of valibotSchema.items) {
-        jsonSchema.items.push(
-          convertSchema({}, item as SchemaOrPipe, config, context)
-        );
-      }
+      // If target is draft-2020-12
+      if (config?.target === 'draft-2020-12') {
+        // Use prefixItems for draft-2020-12
+        jsonSchema.prefixItems = [];
+        jsonSchema.minItems = valibotSchema.items.length;
+        for (const item of valibotSchema.items) {
+          jsonSchema.prefixItems.push(
+            convertSchema({}, item as SchemaOrPipe, config, context)
+          );
+        }
 
-      // Add additional items depending on schema type
-      if (valibotSchema.type === 'tuple_with_rest') {
-        jsonSchema.additionalItems = convertSchema(
-          {},
-          valibotSchema.rest as SchemaOrPipe,
-          config,
-          context
-        );
-      } else if (valibotSchema.type === 'strict_tuple') {
-        jsonSchema.additionalItems = false;
+        // Add additional items depending on schema type
+        if (valibotSchema.type === 'tuple_with_rest') {
+          jsonSchema.items = convertSchema(
+            {},
+            valibotSchema.rest as SchemaOrPipe,
+            config,
+            context
+          );
+        } else if (valibotSchema.type === 'strict_tuple') {
+          jsonSchema.items = false;
+        }
+
+        // If target is draft-07 or unspecified
+      } else {
+        // Use items array for draft-07
+        jsonSchema.items = [];
+        jsonSchema.minItems = valibotSchema.items.length;
+        for (const item of valibotSchema.items) {
+          jsonSchema.items.push(
+            convertSchema({}, item as SchemaOrPipe, config, context)
+          );
+        }
+
+        // Add additional items depending on schema type
+        if (valibotSchema.type === 'tuple_with_rest') {
+          jsonSchema.additionalItems = convertSchema(
+            {},
+            valibotSchema.rest as SchemaOrPipe,
+            config,
+            context
+          );
+        } else if (valibotSchema.type === 'strict_tuple') {
+          jsonSchema.additionalItems = false;
+        }
       }
 
       break;
@@ -343,12 +372,6 @@ export function convertSchema(
     }
 
     case 'record': {
-      if ('pipe' in valibotSchema.key) {
-        errors = addError(
-          errors,
-          'The "record" schema with a schema for the key that contains a "pipe" cannot be converted to JSON Schema.'
-        );
-      }
       if (valibotSchema.key.type !== 'string') {
         errors = addError(
           errors,
@@ -356,6 +379,14 @@ export function convertSchema(
         );
       }
       jsonSchema.type = 'object';
+
+      jsonSchema.propertyNames = convertSchema(
+        {},
+        valibotSchema.key as SchemaOrPipe,
+        config,
+        context
+      );
+
       jsonSchema.additionalProperties = convertSchema(
         {},
         valibotSchema.value as SchemaOrPipe,

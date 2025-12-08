@@ -485,37 +485,39 @@ describe('convertSchema', () => {
         )
       ).toStrictEqual({
         type: 'object',
+        propertyNames: { type: 'string' },
         additionalProperties: { type: 'number' },
       });
     });
 
-    test('should throw error for record schema with pipe in key', () => {
-      const schema = v.record(v.pipe(v.string(), v.email()), v.number());
-      const error =
-        'The "record" schema with a schema for the key that contains a "pipe" cannot be converted to JSON Schema.';
-      expect(() =>
-        convertSchema({}, schema, undefined, createContext())
-      ).toThrowError(error);
-      expect(() =>
-        convertSchema({}, schema, { errorMode: 'throw' }, createContext())
-      ).toThrowError(error);
-    });
-
-    test('should warn error for record schema with pipe in key schema', () => {
+    test('should convert record schema with pipe in key', () => {
       expect(
         convertSchema(
           {},
           v.record(v.pipe(v.string(), v.email()), v.number()),
-          { errorMode: 'warn' },
+          undefined,
           createContext()
         )
       ).toStrictEqual({
         type: 'object',
+        propertyNames: { type: 'string', format: 'email' },
         additionalProperties: { type: 'number' },
       });
-      expect(console.warn).toHaveBeenLastCalledWith(
-        'The "record" schema with a schema for the key that contains a "pipe" cannot be converted to JSON Schema.'
-      );
+    });
+
+    test('should convert record schema with pipe in key schema', () => {
+      expect(
+        convertSchema(
+          {},
+          v.record(v.pipe(v.string(), v.email()), v.number()),
+          undefined,
+          createContext()
+        )
+      ).toStrictEqual({
+        type: 'object',
+        propertyNames: { type: 'string', format: 'email' },
+        additionalProperties: { type: 'number' },
+      });
     });
 
     test('should throw error for record schema with non-string schema key', () => {
@@ -538,6 +540,7 @@ describe('convertSchema', () => {
         convertSchema({}, schema, { errorMode: 'warn' }, createContext())
       ).toStrictEqual({
         type: 'object',
+        propertyNames: { type: 'number', minimum: 10 },
         additionalProperties: { type: 'number' },
       });
       expect(console.warn).toHaveBeenLastCalledWith(
